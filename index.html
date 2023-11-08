@@ -50,10 +50,6 @@ form.addEventListener('submit', async (event) => {
         // Send the token to your server for processing
         // (e.g., create a charge or save the payment method)
         // Make an API call to your backend with the token
-        console.log('Token:', token.id);
-
-        // Add custom logic for charging $50
-        // (Replace this with your actual server-side logic)
         const response = await fetch('/charge', {
             method: 'POST',
             headers: {
@@ -64,6 +60,7 @@ form.addEventListener('submit', async (event) => {
 
         if (response.ok) {
             console.log('Payment successful!');
+            console.log('Token:', token.id);
         } else {
             console.error('Payment failed.');
         }
