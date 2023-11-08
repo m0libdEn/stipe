@@ -21,33 +21,54 @@
     </form>
 
     <script>
-        const stripe = Stripe('pk_test_51KwvvIDcPBPzCoeSYwMEGSiAwymwFO2w0OJcSm6BoXTmQ6TcMsbO3sjoWUGs10k79HwHghrgLEUadFrMjXGUxJ7e00p5SjkFYK');
+ // Initialize Stripe with your publishable key
+ const stripe = Stripe('pk_test_51KwvvIDcPBPzCoeSYwMEGSiAwymwFO2w0OJcSm6BoXTmQ6TcMsbO3sjoWUGs10k79HwHghrgLEUadFrMjXGUxJ7e00p5SjkFYK');
 
-        // Create Elements for card number, expiry, and cvc
-        const elements = stripe.elements();
-        const cardNumber = elements.create('cardNumber');
-        const cardExpiry = elements.create('cardExpiry');
-        const cardCvc = elements.create('cardCvc');
+// Create Elements for card number, expiry, and cvc
+const elements = stripe.elements();
+const cardNumber = elements.create('cardNumber');
+const cardExpiry = elements.create('cardExpiry');
+const cardCvc = elements.create('cardCvc');
 
-        // Mount the Elements to their respective divs
-        cardNumber.mount('#card-number');
-        cardExpiry.mount('#card-expiry');
-        cardCvc.mount('#card-cvc');
+// Mount the Elements to their respective divs
+cardNumber.mount('#card-number');
+cardExpiry.mount('#card-expiry');
+cardCvc.mount('#card-cvc');
 
-        // Handle form submission
-        const form = document.getElementById('payment-form');
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
+// Handle form submission
+const form = document.getElementById('payment-form');
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-            // Create a token from the card details
-            const { token, error } = await stripe.createToken(cardNumber);
+    // Create a token from the card details
+    const { token, error } = await stripe.createToken(cardNumber);
 
-            if (error) {
-                console.error(error.message);
-            } else {
-                console.log('Token:', token.id);
-            }
+    if (error) {
+        // Handle error (e.g., display error message to the user)
+        console.error(error.message);
+    } else {
+        // Send the token to your server for processing
+        // (e.g., create a charge or save the payment method)
+        // Make an API call to your backend with the token
+        console.log('Token:', token.id);
+
+        // Add custom logic for charging $50
+        // (Replace this with your actual server-side logic)
+        const response = await fetch('/charge', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount: 5000 }), // Amount in cents (50 dollars)
         });
+
+        if (response.ok) {
+            console.log('Payment successful!');
+        } else {
+            console.error('Payment failed.');
+        }
+    }
+});
     </script>
 </body>
 </html>
