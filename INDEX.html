@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Payment Form</title>
+    <!-- Include Stripe.js script -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Add your custom CSS styles here */
+        /* For example, styling the form fields, buttons, etc. */
+    </style>
+</head>
+<body>
+    <form id="payment-form">
+        <div id="card-number"></div>
+        <div id="card-expiry"></div>
+        <div id="card-cvc"></div>
+
+        <button type="submit">Pay Now</button>
+    </form>
+
+    <script>
+        const stripe = Stripe('pk_test_51KwvvIDcPBPzCoeSYwMEGSiAwymwFO2w0OJcSm6BoXTmQ6TcMsbO3sjoWUGs10k79HwHghrgLEUadFrMjXGUxJ7e00p5SjkFYK');
+
+        // Create Elements for card number, expiry, and cvc
+        const elements = stripe.elements();
+        const cardNumber = elements.create('cardNumber');
+        const cardExpiry = elements.create('cardExpiry');
+        const cardCvc = elements.create('cardCvc');
+
+        // Mount the Elements to their respective divs
+        cardNumber.mount('#card-number');
+        cardExpiry.mount('#card-expiry');
+        cardCvc.mount('#card-cvc');
+
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Create a token from the card details
+            const { token, error } = await stripe.createToken(cardNumber);
+
+            if (error) {
+                console.error(error.message);
+            } else {
+                console.log('Token:', token.id);
+            }
+        });
+    </script>
+</body>
+</html>
